@@ -4,6 +4,8 @@ const querystring = require('querystring');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 
+const config = require('./config');
+
 // The server should respond to all requests with a string 
 let server = http.createServer(function(req,res) {
     // get tje url and parse it
@@ -68,9 +70,9 @@ let server = http.createServer(function(req,res) {
 });
 
 // Start the server and have it listen to port 3000 
-server.listen(3000, () => {
-    console.log('The server is listening on port 3000 now')
-});
+server.listen(config.port, () => {
+    console.log(`The server is listening on port ${config.port} in ${config.envName} mode`)
+}); // SET NODE_ENV=production
 
 // define the handlers 
 

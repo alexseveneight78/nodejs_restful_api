@@ -25,6 +25,7 @@ let server = http.createServer(function(req,res) {
     console.log('path', path);
     console.log('trimmed path', trimmedPath);
     console.log(queryStringObject);
+    console.log(req.headers)
 
 });
 

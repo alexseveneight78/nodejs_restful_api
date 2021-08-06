@@ -13,7 +13,7 @@ let server = http.createServer(function(req,res) {
     let trimmedPath = path.replace(/^\/+|\/+$/g, "");
 
     // get the query string as an object 
-    let queryStringObject = parsedUrl.query;
+    let queryStringObject = parsedUrl.searchParams;
 
     // get the HTTP method 
     let method = req.method;
@@ -24,7 +24,7 @@ let server = http.createServer(function(req,res) {
     // logthe request path
     console.log('path', path);
     console.log('trimmed path', trimmedPath);
-    console.log(parsedUrl.searchParams);
+    console.log(queryStringObject);
 
 });
 

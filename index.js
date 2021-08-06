@@ -1,7 +1,8 @@
 // Dependencies 
 const http = require('http');
 const querystring = require('querystring');
-const url = require('url')
+const url = require('url');
+const StringDecoder = require('string_decoder').StringDecoder;
 
 // The server should respond to all requests with a string 
 let server = http.createServer(function(req,res) {
@@ -18,18 +19,32 @@ let server = http.createServer(function(req,res) {
     // get the HTTP method 
     let method = req.method;
 
-    // send the response 
-    res.end('Hello World!\n')
+    // get the payload if any 
+    let decoder = new StringDecoder('utf-8');
+    let buffer = '';
+
+    req.on('data', (data) => {
+        buffer += decoder.write(data);
+    });
+
+    req.on('end', () => {
+        buffer += decoder.end();
+
+        // send the response 
+        res.end('Hello world\n')
+        console.log(buffer)
+    })
+    
 
     // logthe request path
-    console.log('path', path);
-    console.log('trimmed path', trimmedPath);
-    console.log(queryStringObject);
-    console.log(req.headers)
+    // console.log('path', path);
+    // console.log('trimmed path', trimmedPath);
+    // console.log(queryStringObject);
+    // console.log(req.headers)
 
 });
 
 // Start the server and have it listen to port 3000 
 server.listen(3000, () => {
-    console.log('The server os listening on port 3000 now')
+    console.log('The server is listening on port 3000 now')
 })

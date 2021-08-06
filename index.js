@@ -1,16 +1,19 @@
 // Dependencies 
-let http = require('http');
-let url = require('url');
-
+const http = require('http');
+const querystring = require('querystring');
+const url = require('url')
 
 // The server should respond to all requests with a string 
 let server = http.createServer(function(req,res) {
     // get tje url and parse it
-    let parsedUrl = new URL(req.url, "http://localhost:3000/")
+    let parsedUrl = new URL(req.url, "http://localhost:3000/foo?fizz=buzz")
 
     // get the path 
     let path = parsedUrl.pathname;
-    let trimmedPath = path.replace(/^\/+|\/+$/g, "")
+    let trimmedPath = path.replace(/^\/+|\/+$/g, "");
+
+    // get the query string as an object 
+    let queryStringObject = parsedUrl.query;
 
     // get the HTTP method 
     let method = req.method;
@@ -19,9 +22,9 @@ let server = http.createServer(function(req,res) {
     res.end('Hello World!\n')
 
     // logthe request path
-    console.log('Request recreived on trimmed path: ' + trimmedPath + ' with the method ' + method);
-    console.log('Request recreived on path: ' + path);
-    console.log('Request recreived with url: ' + parsedUrl);
+    console.log('path', path);
+    console.log('trimmed path', trimmedPath);
+    console.log(parsedUrl.searchParams);
 
 });
 

@@ -6,7 +6,15 @@ const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const fs = require('fs');
 
+const _data = require('./lib/data');
+
 const config = require('./config');
+
+// TESTING 
+// @TODO delete this 
+_data.delete('test','newFile', (err) => {
+    console.log('this was the error', err);
+});
 
 // Instantiate the HTTP server
 let httpServer = http.createServer(function(req,res) {

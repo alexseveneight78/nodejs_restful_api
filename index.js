@@ -1,13 +1,39 @@
 // Dependencies 
 const http = require('http');
+const https = require('https');
 const querystring = require('querystring');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
+const fs = require('fs');
 
 const config = require('./config');
 
-// The server should respond to all requests with a string 
-let server = http.createServer(function(req,res) {
+// Instantiate the HTTP server
+let httpServer = http.createServer(function(req,res) {
+    unifiedServer(req,res)
+});
+
+// Start the HTTP server and have it listen to port 3000 
+httpServer.listen(config.httpPort, () => {
+    console.log(`The server is listening on port ${config.httpPort}`)
+}); // SET NODE_ENV=production
+
+// Instantiate the HTTPS server 
+let httpsServerOptions = {
+    'key': fs.readFileSync('./https/-key.pem'),
+    'cert': fs.readFileSync('./https/cert.pem')
+};
+let httpsServer = https.createServer(httpsServerOptions,function(req,res) {
+    unifiedServer(req,res)
+});
+
+// Start the HTTPS server 
+httpsServer.listen(config.httpsPort, () => {
+    console.log(`The server is listening on port ${config.httpsPort}`)
+}); 
+
+// all the server logic for http and https servers
+let unifiedServer = (req,res) => {
     // get tje url and parse it
     let parsedUrl = new URL(req.url, "http://localhost:3000/foo?fizz=buzz")
 
@@ -59,20 +85,7 @@ let server = http.createServer(function(req,res) {
             res.end(payloadString); 
         });
     })
-    
-
-    // logthe request path
-    // console.log('path', path);
-    // console.log('trimmed path', trimmedPath);
-    // console.log(queryStringObject);
-    // console.log(req.headers)
-
-});
-
-// Start the server and have it listen to port 3000 
-server.listen(config.port, () => {
-    console.log(`The server is listening on port ${config.port} in ${config.envName} mode`)
-}); // SET NODE_ENV=production
+};
 
 // define the handlers 
 
@@ -95,3 +108,12 @@ handlers.notFound = (data, callback) => {
 let router = {
     'sample': handlers.sample
 };
+
+/*
+set OpenSSL environment for current session only: 
+
+set OPENSSL_CONF=C:\OpenSSL-Win64\bin\openssl.cfg
+set Path=%Path%;C:\OpenSSL-Win64\bin
+
+command for SSL cert creation: openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout -key.pem -out cert.pem
+*/

@@ -5,6 +5,8 @@ const querystring = require('querystring');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const fs = require('fs');
+const handlers = require('./lib/handlers');
+const helpers = require('./lib/helpers');
 
 const _data = require('./lib/data');
 
@@ -53,7 +55,7 @@ let unifiedServer = (req,res) => {
     let queryStringObject = parsedUrl.searchParams;
 
     // get the HTTP method 
-    let method = req.method;
+    let method = req.method.toLowerCase();
 
     // get the payload if any 
     let decoder = new StringDecoder('utf-8');
@@ -75,7 +77,7 @@ let unifiedServer = (req,res) => {
             'queryStringObject': queryStringObject,
             'method' : method,
             //'headers' : headers,
-            'payload' : buffer
+            'payload' : helpers.parseJsonToObject(buffer)
         };
 
         // route the request to the handler specified in the router
@@ -95,25 +97,11 @@ let unifiedServer = (req,res) => {
     })
 };
 
-// define the handlers 
-
-let handlers = {};
-
-// ping handler 
-
-handlers.ping = (data, cb) => {
-    cb(200);
-};
-
-// not found handler 
-
-handlers.notFound = (data, callback) => {
-    callback(404);
-};
 
 // define a request router 
 let router = {
-    'ping': handlers.ping
+    'ping': handlers.ping,
+    'users' : handlers.users
 };
 
 /*

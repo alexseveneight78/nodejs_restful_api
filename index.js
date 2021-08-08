@@ -45,8 +45,8 @@ httpsServer.listen(config.httpsPort, () => {
 // all the server logic for http and https servers
 let unifiedServer = (req,res) => {
     // get tje url and parse it
-    let parsedUrl = new URL(req.url, "http://localhost:3000/foo?fizz=buzz")
-
+    let parsedUrl = new URL(req.url, "http://localhost:3000/");
+    
     // get the path 
     let path = parsedUrl.pathname;
     let trimmedPath = path.replace(/^\/+|\/+$/g, "");
